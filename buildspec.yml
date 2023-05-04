@@ -32,7 +32,7 @@ phases:
     commands:
       - echo "push image to ECR"
       - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $ECR_REPO:$IMAGE_TAG > imagedefinitions.json
-      - docker push $IMAGE_REPO:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
 
 reports:
   test-report:
