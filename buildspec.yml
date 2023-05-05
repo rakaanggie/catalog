@@ -1,0 +1,43 @@
+version: 0.2
+run as: root
+
+env:
+  variables:
+    ECR_REGION: us-east-1
+    CONTAINER_NAME: lks-catalog-container
+    IMAGE_REPO: lks-catalog-image
+
+phases:
+  install:
+    runtime-version:
+      nodejs: 16
+      docker: 20
+  pre_build:
+    commands:
+      - echo "Install Dependencies and login into ECR"
+      - aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com
+      - ECR_REPO=$AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.production
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY} >> .env.production
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.testing
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY} >> .env.testing
+  build:
+    commands:
+      - echo "Run unit testing and build docker image"
+      - npm install
+      - npm run test
+      - docker build -t $IMAGE_REPO:$IMAGE_TAG -f Dockerfile .
+      - docker tag $IMAGE_REPO:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
+  post_build:
+    commands:
+      - echo "push image to ECR"
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $ECR_REPO:$IMAGE_TAG  > imagedefinitions.json
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
+
+reports:
+  test-report:
+    files: report/test-result.xml
+    file-format: JUNITXML
+
+artifacts:
+  files: imagedefinitions.json
