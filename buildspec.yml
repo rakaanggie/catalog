@@ -17,10 +17,10 @@ phases:
       - echo "Install Dependencies and login into ECR"
       - aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com
       - ECR_REPO=$AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO
-      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.production
-      - AWS_SECRET_KEY=${AWS_SECRET_KEY} >> .env.production
-      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.testing
-      - AWS_SECRET_KEY=${AWS_SECRET_KEY} >> .env.testing
+      - echo AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.production
+      - echo AWS_SECRET_KEY=${AWS_SECRET_KEY} >> .env.production
+      - echo AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.testing
+      - echo AWS_SECRET_KEY=${AWS_SECRET_KEY} >> .env.testing
   build:
     commands:
       - echo "Run unit testing and build docker image"
