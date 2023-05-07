@@ -1,0 +1,17 @@
+{
+   "AWSEBDockerrunVersion": "1",
+   "Authentication": {
+      "Bucket": "lks-raka-jawatimur", 
+      "Key": "config.json"
+   },
+   "Image": {
+      "Name": "405040917563.dkr.ecr.us-east-1.amazonaws.com/lks-catalog-image:latest",
+      "Update": "true"
+   },
+   "Ports": [
+      {
+         "ContainerPort": 8000,
+         "HostPort": 80
+      }
+   ]
+}
