@@ -41,4 +41,6 @@ reports:
     file-format: JUNITXML
 
 artifacts:
-  files: imagedefinitions.json
+  files: 
+    - imagedefinitions.json
+    - Dockerrun.aws.json
