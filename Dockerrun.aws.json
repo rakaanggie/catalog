@@ -6,7 +6,7 @@
    },
    "Image": {
       "Name": "405040917563.dkr.ecr.us-east-1.amazonaws.com/lks-catalog-image:latest",
-      "Update": "true"
+      "Update": "false"
    },
    "Ports": [
       {
