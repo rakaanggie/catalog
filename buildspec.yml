@@ -12,15 +12,15 @@ phases:
     runtime-versions:
       nodejs: 16
       docker: 20
-  pre_build: 
+  pre_build:
     commands:
-      - echo "Install Dependencies and login into ECR"
+      - echo "Install dependencies and login into ECR"
       - aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com
       - ECR_REPO=$AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO
-      - echo AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.production 
-      - echo AWS_SECRET_KEY=${AWS_SECRET_KEY} >> .env.production 
-      - echo AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.testing 
-      - echo AWS_SECRET_KEY=${AWS_SECRET_KEY} >> .env.testing 
+      - echo AWS_ACCESS_KEY={AWS_ACCESS_KEY} >>.env.production
+      - echo AWS_SECRET_KEY={AWS_SECRET_KEY} >>.env.production
+      - echo AWS_ACCESS_KEY={AWS_ACCESS_KEY} >>.env.testing
+      - echo AWS_SECRET_KEY={AWS_SECRET_KEY} >>.env.testing
   build:
     commands:
       - echo "Run unit testing and build docker image"
@@ -31,8 +31,8 @@ phases:
   post_build:
     commands:
       - echo "push image to ECR"
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
       - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $ECR_REPO:$IMAGE_TAG > imagedefinitions.json
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
       - echo "build complete"
 
 reports:
