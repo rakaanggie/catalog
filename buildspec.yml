@@ -14,7 +14,7 @@ phases:
       docker: 20
   pre_build:
     commands:
-      - echo "Install dependencies and login into ECR"
+      - echo "Install Dependencies and login into ECR"
       - aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com
       - ECR_REPO=$AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO
       - echo AWS_ACCESS_KEY=${AWS_ACCESS_KEY} >> .env.production
@@ -30,11 +30,10 @@ phases:
       - docker tag $IMAGE_REPO:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
   post_build:
     commands:
-      - echo "Push image to ECR.."
+      - echo "push image to ECR"
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$ECR_REGION.amazonaws.com/$IMAGE_REPO:$IMAGE_TAG
       - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $ECR_REPO:$IMAGE_TAG > imagedefinitions.json
-      - printf '{"AWSEBDockerrunVersion":"1","Image":{"Name":"405040917563.dkr.ecr.us-east-1.amazonaws.com/lks-catalog-image","Update":"true"},"Ports":[{"ContainerPort":8000,"HostPort":80}]}' > Dockerrun.aws.json
-      - echo "Build complete.."
+      - printf '{"AWSEBDockerrunVersion":"1","Image":{"Name":"405040917563.dkr.ecr.us-east-1.amazonaws.com/lks-catalog-image:latest","Update":"true"},"Ports":[{"ContainerPort":8000,"HostPort":80}]}' >> Dockerrun.aws.json
 
 reports:
   test-report:
