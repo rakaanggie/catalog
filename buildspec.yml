@@ -20,7 +20,7 @@ phases:
       - echo "AWS_ACCESS_KEY=${AWS_ACCESS_KEY}" >> .env.testing
       - echo "AWS_SECRET_KEY=${AWS_SECRET_KEY}" >> .env.testing
   build:
-    comands:
+    commands:
       - echo "Run unit testing and build docker image"
       - npm install
       - npm run test
